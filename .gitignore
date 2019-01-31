@@ -1,5 +1,6 @@
 #Venv folder:
 venv/
+.venv/
 
 #Database:
 db.sqlite3 
@@ -7,7 +8,7 @@ db.sqlite3
 
 #Migrations:
 migrations/
-
+.migrations/
 
 
 #Pycache:
