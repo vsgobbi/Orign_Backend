@@ -1,19 +1,13 @@
-from django.forms.models import model_to_dict
 from django.shortcuts import get_object_or_404, get_list_or_404
 from rest_framework import viewsets, status, generics, permissions
 from rest_framework.response import Response
 from django.http import HttpResponse, JsonResponse
-from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
-from rest_framework.decorators import action
 from rest_framework.decorators import api_view
-from rest_framework.views import APIView
 
 from .serializers import ClientSerializer, HousesSerializer, VehiclesSerializer, \
     UpdatedClientSerializer,  RiskScoreSerializer, ClientUpdateSerialzier
 from .models import Client, House, Vehicle, RiskScore
-
-# Create your views here.
 
 
 def option(request, client_id, car_id, house_id):
@@ -118,31 +112,12 @@ def post_client(request, pk):
         #return Response(ClientSerializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-#Test: Make a post including client 1, 2 and 3 to exclude_client
-@api_view(['POST'])
-def delete_client(request):
-
-    if request.method == 'POST':
-        context = {"exclude_client": ["1", "2", "3"]}
-        serializer = RiskScoreSerializer(data=request.data, context=context)
-
-
 class ClientView(viewsets.ModelViewSet):
 
     queryset = Client.objects.all()
     serializer_class = ClientSerializer
     permission_classes = [permissions.AllowAny]
-    '''
-    def update(self, request, *args, **kwargs):
-        #partial = Client.objects.filter
-        serializer = ClientUpdateSerialzier(Client, data=request.data)
-        if serializer.is_valid():
-            instance = get_object_or_404(Client)
-            instance.client = request.data.get("id")
-            instance.save()
-            serializer.save(request.data)
-            return Response(serializer.data, status=201)
-    '''
+
     def get_serializer_class(self):
         if self.request.method == 'GET':
             return self.serializer_class
@@ -166,7 +141,6 @@ class ClientUpdateView(viewsets.ModelViewSet):
 #url: /score
 class RiskTest(generics.CreateAPIView):
 #class RiskTest(generics.ListCreateAPIView):
-#class RiskTest(viewsets.ModelViewSet):
     queryset = RiskScore.objects.all()
     serializer_class = RiskScoreSerializer
 
@@ -181,9 +155,7 @@ class RiskTest(generics.CreateAPIView):
             risk_scores = RiskScore.objects.all()
             serializer = RiskScoreSerializer(risk_scores, many=True)
             return JsonResponse(serializer.data, safe=False, status=200)
-            #return Response(serializer.data, status=200)
         else:
-            #return Response(UpdatedClientSerializer.serializer.errors, status=400)
             return JsonResponse({"id": "None"}, status=400)
 
     def get_queryset(self):
@@ -205,7 +177,6 @@ class RiskTest(generics.CreateAPIView):
 
 class RiskScoreView(viewsets.ModelViewSet):
 
-    #queryset = RiskScore.objects.all().values('auto', 'home', 'life', 'disability', 'umbrella')
     queryset = RiskScore.objects.all()
     serializer_class = RiskScoreSerializer
     permission_classes = [permissions.AllowAny]
@@ -291,9 +262,6 @@ class UpdateAPITest(generics.UpdateAPIView):
             serializer = ClientSerializer(Client, data=request.data)
             if serializer.is_valid():
                 instance = self.get_object()
-                #instance.client = request.data.get("id")
-                #instance.vehicles = request.data.get("vehicles")
-                #instance.houses = request.data.get("houses")
                 instance.save()
                 serializer = self.get_serializer(instance)
 
