@@ -1,4 +1,4 @@
-Django==2.1.5
+Django==2.1.7
 django-nine==0.1.13
 django-rest-framework-tricks==0.2.9
 djangorestframework==3.9.1
